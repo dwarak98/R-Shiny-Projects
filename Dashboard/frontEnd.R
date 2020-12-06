@@ -15,7 +15,6 @@ library(ggplot2)
 library(forecast)
 library(tseries)
 library(sjmisc)
-source("helperMethods.R")
 library(shinycssloaders)
 
 # Options for Spinner
@@ -23,9 +22,6 @@ options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.siz
 
 
 
-
-df = getForecastVsActual()
-gendf = getGenMix()
 
 
 addDashboardMenu <- function(id,logo = "dashboard"){
@@ -96,27 +92,7 @@ addPredictorOptions <- function(){
   )
 }
 
-addDashboardTabContent <- function(){
-  tabItem(tabName = "Dashboard",
-          fluidRow(
-            box(
-              width = 3,
-              addDateRangeSelector("date"),
-              addHourSlider(),
-              addCategory()
-            ),
-            box(
-              width = 9,
-              addPlot("line")
-            )
-          ),
-          fluidRow(
-            box(
-              width = 12, 
-              addPlot("bar", height = 800)
-            )))
-  
-}
+
 
 addWidgetTabContent <- function(){
   
@@ -177,7 +153,6 @@ ui <- dashboardPage(
   dashboardHeader(
     title = "Basic dashboard"),
   dashboardSidebar(sidebarMenu(
-    addDashboardMenu(id = "Dashboard"),
     addDashboardMenu(id ="Widgets",logo = "th"),
     addDashboardMenu(id = "Visualization",logo = "th"),
     addDashboardMenu(id = "Prediction",logo = "th")
@@ -185,12 +160,10 @@ ui <- dashboardPage(
   dashboardBody(# Boxes need to be put in a row (or column)
     tabItems(
       # 1st tab content
-      addDashboardTabContent(),
-      # 2nd tab content
       addWidgetTabContent(),
-      # 3rd tab
+      # 2nd tab
       addVisuTabContent(),
-      # 4th tab
+      # 3rd tab
       addPredictTabContent()
     ))
 )
