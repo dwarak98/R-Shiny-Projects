@@ -1,22 +1,16 @@
-library(blastula)
 library(keyring)
 library('rmarkdown')
 library("blastula")
 library("glue")
-setwd("/Users/dvaradharajan/Git/Shiny-Dashboard")
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 source("helperMethods.R")
 library(ggplot2)
-
+library(formattable)
 
 
 df <- getForecastVsActual()
-
-#img_file_path <- "saved_image.jpeg"
-
-
-
-#jpeg(file=img_file_path, width = 1080, height = 920)
+typeof(df)
 
 p1 <- df %>%
   filter(variable %in% c("wind_pen_actual", "wind_pen_STF", "wind_pen_MTF")) %>%
@@ -39,36 +33,49 @@ plot_image <- ggplotly(p1, tooltip = c("text"))
 
 
 date_time <- add_readable_time()
-plot_email <- add_ggplot(plot_image, height = 12.266666666666667, width = 14.4)
+plot_email <- add_ggplot(p1, height = 12.266666666666667, width = 14.4)
+
+
+convert_DF_To_Table <- function(df){
+  # Create an HTML table with `format_table()`
+    format_table(
+      x = df,
+      list(value = formatter("span", style = "color:red"))
+    )
+}
+
+send_email <- function(email){
+  Sys.setenv(SMTP_PASSWORD="Ooct248014")
+  
+  
+  email %>%
+    smtp_send(
+      from = "sppim.newsletter@gmail.com",
+      to = "dwarakvaradharajan@gmail.com",
+      subject = "Testing the `smtp_send()` function",
+      credentials = creds_envvar(
+        user = "sppim.newsletter@gmail.com",
+        pass_envvar = "SMTP_PASSWORD",
+        provider = "gmail",
+        host = NULL,
+        port = NULL,
+        use_ssl = TRUE
+      )
+    )
+  
+  
+}
+
+
+
 
 email <- compose_email(
-  body = md(c("Hi Team, This important forecast needs to go out today.", plot_email)),
-  footer = md(c("Email sent on ", date_time,"."))
-)
+  body = md(glue("
+  Hello, the table is here 
+  {convert_DF_To_Table(head(df))}",plot_email
+) ),
+footer = md(c("Email sent on ", date_time,".")))
+
+send_email(email)
 
 
-Sys.setenv(SMTP_PASSWORD="Ooct248014")
-
-
-# email <- render_email('email.Rmd')
-# create_smtp_creds_key(
-#   id = "gmail",
-#   user = "sppim.newsletter@gmail.com",
-#   provider = "gmail",
-#  # overwrite = TRUE
-# )
-
-email %>%
-  smtp_send(
-    from = "sppim.newsletter@gmail.com",
-    to = "dwarakvaradharajan@gmail.com",
-    subject = "Testing the `smtp_send()` function",
-    credentials = creds_envvar(
-      user = "sppim.newsletter@gmail.com",
-      pass_envvar = "SMTP_PASSWORD",
-      provider = "gmail",
-      host = NULL,
-      port = NULL,
-      use_ssl = TRUE
-    )
-    )
