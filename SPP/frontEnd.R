@@ -118,60 +118,6 @@ addDashboardTabContent <- function(){
   
 }
 
-addWidgetTabContent <- function(){
-  
-  tabItem(
-    tabName = "Widgets",
-    addLoadFilesFromDirectory("file1"),
-    addNumericInput("n","Enter Number of Rows to be displayed"),
-    tableOutput("head")
-    
-  )
-  
-}
-
-addVisuTabContent <- function(){
-  tabItem(tabName = "Visualization",
-          fluidRow(
-            box(
-              width = 3,
-              addChartOptions(),
-              uiOutput("lineplotVar1"), # Reactive Input
-              uiOutput("lineplotVar2"), # Reactive Input
-              uiOutput("lineplotVar3"), # Reactive Input
-              uiOutput("tablecol1"),    # Reactive Input
-              uiOutput("tablecol2"),
-              uiOutput("tablecol3")
-              
-            ),
-            box(
-              width = 9,
-              uiOutput("LinePlot"),
-              uiOutput("tableplot")
-              )
-          )
-          )
-  
-}
-
-addPredictTabContent <- function(){
-  tabItem(tabName = "Prediction",
-          fluidRow(
-            box(
-              width = 3,
-              addPredictorOptions(),
-              uiOutput("P"),
-              uiOutput("Q"),
-              uiOutput("D"),
-              uiOutput("y_variable"),
-              uiOutput("x")
-            ),
-            box(
-              width = 9,
-              uiOutput("table1plot"))
-          ))
-  
-}
 
 ui <- dashboardPage(
   dashboardHeader(
