@@ -43,12 +43,7 @@ addHourSlider <- function(id="Hour"){
 }
 
 
-addCategory <- function(id = "Category"){
-  
-  selectInput(id,label = id,choices = unique(as.character(getForecastVsActual()$variable)),
-    selected = c("wind_pen_actual", "wind_pen_STF", "wind_pen_MTF"),
-    multiple = TRUE)
-}
+
 
 addPlot <- function(id,height = 400){
   

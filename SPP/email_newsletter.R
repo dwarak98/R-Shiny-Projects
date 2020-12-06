@@ -3,7 +3,7 @@ library(keyring)
 library('rmarkdown')
 library("blastula")
 library("glue")
-setwd("/Users/dvaradharajan/Git/Shiny-Dashboard")
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 source("helperMethods.R")
 library(ggplot2)
@@ -39,7 +39,7 @@ plot_image <- ggplotly(p1, tooltip = c("text"))
 
 
 date_time <- add_readable_time()
-plot_email <- add_ggplot(plot_image, height = 12.266666666666667, width = 14.4)
+plot_email <- add_ggplot(p1, height = 12.266666666666667, width = 14.4)
 
 email <- compose_email(
   body = md(c("Hi Team, This important forecast needs to go out today.", plot_email)),
