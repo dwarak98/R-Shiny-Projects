@@ -1,4 +1,3 @@
-library(blastula)
 library(keyring)
 library('rmarkdown')
 library("blastula")
@@ -7,16 +6,11 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 source("helperMethods.R")
 library(ggplot2)
-
+library(formattable)
 
 
 df <- getForecastVsActual()
 
-#img_file_path <- "saved_image.jpeg"
-
-
-
-#jpeg(file=img_file_path, width = 1080, height = 920)
 
 p1 <- df %>%
   filter(variable %in% c("wind_pen_actual", "wind_pen_STF", "wind_pen_MTF")) %>%
@@ -41,22 +35,22 @@ plot_image <- ggplotly(p1, tooltip = c("text"))
 date_time <- add_readable_time()
 plot_email <- add_ggplot(p1, height = 12.266666666666667, width = 14.4)
 
+
+# Create an HTML table with `format_table()`
+formatted_table <-
+  format_table(
+    x = head(df)
+    )
+
 email <- compose_email(
-  body = md(c("Hi Team, This important forecast needs to go out today.", plot_email)),
+  body = md(
+    c("Wind Penetration Statistics", plot_email)),
   footer = md(c("Email sent on ", date_time,"."))
 )
 
 
 Sys.setenv(SMTP_PASSWORD="Ooct248014")
 
-
-# email <- render_email('email.Rmd')
-# create_smtp_creds_key(
-#   id = "gmail",
-#   user = "sppim.newsletter@gmail.com",
-#   provider = "gmail",
-#  # overwrite = TRUE
-# )
 
 email %>%
   smtp_send(
