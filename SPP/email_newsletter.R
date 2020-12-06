@@ -10,7 +10,7 @@ library(formattable)
 
 
 df <- getForecastVsActual()
-
+typeof(df)
 
 p1 <- df %>%
   filter(variable %in% c("wind_pen_actual", "wind_pen_STF", "wind_pen_MTF")) %>%
@@ -36,33 +36,46 @@ date_time <- add_readable_time()
 plot_email <- add_ggplot(p1, height = 12.266666666666667, width = 14.4)
 
 
-# Create an HTML table with `format_table()`
-formatted_table <-
-  format_table(
-    x = head(df)
+convert_DF_To_Table <- function(df){
+  # Create an HTML table with `format_table()`
+    format_table(
+      x = df,
+      list(value = formatter("span", style = "color:red"))
     )
+}
+
+send_email <- function(email){
+  Sys.setenv(SMTP_PASSWORD="Ooct248014")
+  
+  
+  email %>%
+    smtp_send(
+      from = "sppim.newsletter@gmail.com",
+      to = "dwarakvaradharajan@gmail.com",
+      subject = "Testing the `smtp_send()` function",
+      credentials = creds_envvar(
+        user = "sppim.newsletter@gmail.com",
+        pass_envvar = "SMTP_PASSWORD",
+        provider = "gmail",
+        host = NULL,
+        port = NULL,
+        use_ssl = TRUE
+      )
+    )
+  
+  
+}
+
+
+
 
 email <- compose_email(
-  body = md(
-    c("Wind Penetration Statistics", plot_email)),
-  footer = md(c("Email sent on ", date_time,"."))
-)
+  body = md(glue("
+  Hello, the table is here 
+  {convert_DF_To_Table(head(df))}",plot_email
+) ),
+footer = md(c("Email sent on ", date_time,".")))
+
+send_email(email)
 
 
-Sys.setenv(SMTP_PASSWORD="Ooct248014")
-
-
-email %>%
-  smtp_send(
-    from = "sppim.newsletter@gmail.com",
-    to = "dwarakvaradharajan@gmail.com",
-    subject = "Testing the `smtp_send()` function",
-    credentials = creds_envvar(
-      user = "sppim.newsletter@gmail.com",
-      pass_envvar = "SMTP_PASSWORD",
-      provider = "gmail",
-      host = NULL,
-      port = NULL,
-      use_ssl = TRUE
-    )
-    )
