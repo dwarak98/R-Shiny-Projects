@@ -177,20 +177,17 @@ ui <- dashboardPage(
   dashboardHeader(
     title = "Basic dashboard"),
   dashboardSidebar(sidebarMenu(
-    addDashboardMenu(id = "Dashboard"),
-    addDashboardMenu(id ="Widgets",logo = "th"),
-    addDashboardMenu(id = "Visualization",logo = "th"),
-    addDashboardMenu(id = "Prediction",logo = "th")
+    addDashboardMenu(id = "Dashboard")
   )),
   dashboardBody(# Boxes need to be put in a row (or column)
     tabItems(
       # 1st tab content
-      addDashboardTabContent(),
+      addDashboardTabContent()
       # 2nd tab content
-      addWidgetTabContent(),
+     # addWidgetTabContent(),
       # 3rd tab
-      addVisuTabContent(),
+     # addVisuTabContent(),
       # 4th tab
-      addPredictTabContent()
+     # addPredictTabContent()
     ))
 )
