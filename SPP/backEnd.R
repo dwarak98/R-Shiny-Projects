@@ -96,8 +96,6 @@ server <- function(input, output, session) {
     })
   }
   
-
-  
   ############# Static Line Chart #################################
   
   addWindPenetrationPlot()
@@ -106,5 +104,6 @@ server <- function(input, output, session) {
   
   addGenMixBarPlot()
   
+
   
 }
