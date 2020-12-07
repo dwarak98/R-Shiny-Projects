@@ -71,7 +71,7 @@ send_email <- function(email){
 
 email <- compose_email(
   body = md(glue("
-  Hello, the table is here 
+  Hello, head of the table is being displayed here
   {convert_DF_To_Table(head(df))}",plot_email
 ) ),
 footer = md(c("Email sent on ", date_time,".")))
